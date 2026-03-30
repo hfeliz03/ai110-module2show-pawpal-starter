@@ -50,6 +50,9 @@ pip install -r requirements.txt
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
 
+### Final Design
+The final system architecture is documented in our **[System UML Diagram](uml_final.png)**.
+
 ## Testing PawPal+
 
 To ensure the reliability of the scheduling and recurrence logic, a comprehensive test suite is included.

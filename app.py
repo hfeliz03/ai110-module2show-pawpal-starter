@@ -150,28 +150,56 @@ if st.session_state.current_pet:
         st.session_state.current_pet.add_task(new_task)
         st.success(f"✓ Added task: {task_name}")
     
-    # Display current tasks
-    if st.session_state.current_pet.tasks:
-        st.markdown("#### Current Tasks:")
+    # Global Conflict Warnings
+    scheduler = Scheduler(st.session_state.owner)
+    conflicts = scheduler.detect_conflicts()
+    if conflicts:
+        st.warning("⚠️ **Scheduling Conflicts Detected:**")
+        for conflict in conflicts:
+            st.write(f"- {conflict}")
+
+    # Display current tasks (Sorted chronologically)
+    all_tasks = scheduler.generate_plan()
+    if all_tasks:
+        st.markdown(f"#### All Scheduled Tasks (Sorted Chronologically):")
         
-        for i, task in enumerate(st.session_state.current_pet.tasks):
-            col1, col2, col3, col4, col5 = st.columns([3, 2, 2, 2, 1])
-            with col1:
-                status = "✅" if task.completed else "⏳"
-                st.write(f"{status} **{task.name}**")
-            with col2:
-                st.write(f"⏱️ {task.duration} min")
-            with col3:
-                st.write(f"📅 {task.due_date.strftime('%Y-%m-%d')}")
-            with col4:
-                st.write(f"🔄 {task.frequency.value}")
-            with col5:
-                if not task.completed:
-                    if st.button("Done", key=f"complete_task_{i}_{task.name}"):
-                        st.session_state.current_pet.complete_task(task)
+        task_table_data = []
+        for i, task in enumerate(all_tasks):
+            # Find which pet this task belongs to (for display)
+            pet_name = "Unknown"
+            for pet in st.session_state.owner.pets:
+                if task in pet.tasks:
+                    pet_name = pet.name
+                    break
+            
+            task_table_data.append({
+                "Status": "✅" if task.completed else "⏳",
+                "Pet": pet_name,
+                "Task": task.name,
+                "Time": task.due_date.strftime('%H:%M'),
+                "Duration": f"{task.duration} min",
+                "Repeat": task.frequency.value,
+                "ID": i # Just for reference
+            })
+        
+        # Display as a table for professional look
+        st.table(task_table_data)
+        
+        # Actions (Mark Complete)
+        st.markdown("#### Actions:")
+        cols = st.columns(4)
+        for i, task in enumerate(all_tasks):
+            if not task.completed:
+                with cols[i % 4]:
+                    if st.button(f"Done: {task.name}", key=f"complete_btn_{i}_{task.name}"):
+                        # We need to find the pet to call complete_task
+                        for pet in st.session_state.owner.pets:
+                            if task in pet.tasks:
+                                pet.complete_task(task)
+                                break
                         st.rerun()
     else:
-        st.info(f"No tasks yet for {st.session_state.current_pet.name}. Add one above!")
+        st.info("No tasks scheduled yet. Add tasks above!")
 
 st.divider()
 
@@ -199,11 +227,11 @@ if st.session_state.owner and st.session_state.owner.pets:
                 st.metric("Total Time Required", f"{total_time} min")
             
             # Show plan table
-            st.markdown("#### Your Daily Plan (by priority):")
+            st.markdown("#### Your Daily Chronological Schedule:")
             plan_list = []
             for i, task in enumerate(daily_plan, 1):
                 plan_list.append({
-                    "Order": i,
+                    "Time": task.due_date.strftime('%H:%M'),
                     "Task": task.name,
                     "Duration": f"{task.duration} min",
                     "Priority": f"{task.priority}/5",
@@ -211,10 +239,10 @@ if st.session_state.owner and st.session_state.owner.pets:
                 })
             st.table(plan_list)
             
-            # Show explanation
-            st.markdown("#### Plan Explanation:")
+            # Show explanation and warnings
+            st.markdown("#### Schedule Analysis:")
             explanation = scheduler.explain_plan()
-            st.text(explanation)
+            st.info(explanation)
             
             # Time availability warning
             total_time = sum(task.duration for task in daily_plan)
