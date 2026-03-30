@@ -65,7 +65,9 @@ No
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
+My conflict detection logic only checks adjacent tasks in a sorted list of start times (linear sweep). 
 - Why is that tradeoff reasonable for this scenario?
+This is a "lightweight" strategy that is computationally efficient ($O(n \log n)$). While it could theoretically miss a conflict if one exceptionally long task overlaps with many subsequent short tasks, most pet care tasks (feeding, walking) are relatively short and discrete. In a typical daily schedule, adjacent checks provide high coverage of common planning errors without the complexity of a full interval-tree implementation.
 
 ---
 

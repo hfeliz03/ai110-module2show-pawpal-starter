@@ -22,6 +22,14 @@ Your final app should:
 - Display the plan clearly (and ideally explain the reasoning)
 - Include tests for the most important scheduling behaviors
 
+## Smarter Scheduling (New Features)
+
+PawPal+ now includes advanced scheduling logic to help you manage recurring tasks and avoid planning conflicts:
+
+- **Recurring Tasks**: Mark a task as "Daily" or "Weekly", and the system will automatically create the next instance with the correct due date as soon as you complete the current one.
+- **Conflict Detection**: The Scheduler now scans your entire plan across all pets and alerts you if any tasks overlap in time, ensuring you never double-book your pet care duties.
+- **Pythonic Optimization**: Core algorithms have been refactored for better performance and readability using modern Python patterns like `zip()` and `timedelta`.
+
 ## Getting started
 
 ### Setup

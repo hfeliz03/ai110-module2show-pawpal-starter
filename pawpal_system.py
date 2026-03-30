@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-from typing import List
-from datetime import datetime
+from typing import List, Optional
+from datetime import datetime, timedelta
 from enum import Enum
 
 
@@ -14,6 +14,13 @@ class TaskCategory(Enum):
     OTHER = "Other"
 
 
+class TaskFrequency(Enum):
+    """Enum for task frequency"""
+    ONCE = "Once"
+    DAILY = "Daily"
+    WEEKLY = "Weekly"
+
+
 @dataclass
 class Task:
     """Represents a pet care task"""
@@ -21,6 +28,8 @@ class Task:
     duration: int  # duration in minutes
     priority: int  # 1-5, where 5 is highest priority
     category: TaskCategory
+    frequency: TaskFrequency = TaskFrequency.ONCE
+    due_date: datetime = field(default_factory=datetime.now)
     completed: bool = False
     created_at: datetime = field(default_factory=datetime.now)
     
@@ -51,6 +60,40 @@ class Pet:
         """Remove a task from the pet"""
         if task in self.tasks:
             self.tasks.remove(task)
+    
+    def complete_task(self, task: Task) -> None:
+        """
+        Mark a task as completed and automatically create the next occurrence if it is recurring.
+        
+        This method updates the task's status to completed and, if the task has a frequency 
+        of DAILY or WEEKLY, it calculates the next due date using timedelta and adds a 
+        new task instance to the pet's task list.
+        
+        Args:
+            task: The Task object to be marked as complete.
+        """
+        if task not in self.tasks:
+            return
+            
+        task.mark_completed()
+        
+        if task.frequency != TaskFrequency.ONCE:
+            # Create next occurrence
+            next_due_date = task.due_date
+            if task.frequency == TaskFrequency.DAILY:
+                next_due_date += timedelta(days=1)
+            elif task.frequency == TaskFrequency.WEEKLY:
+                next_due_date += timedelta(weeks=1)
+            
+            new_task = Task(
+                name=task.name,
+                duration=task.duration,
+                priority=task.priority,
+                category=task.category,
+                frequency=task.frequency,
+                due_date=next_due_date
+            )
+            self.add_task(new_task)
     
     def get_tasks(self) -> List[Task]:
         """Get all tasks for the pet"""
@@ -133,6 +176,42 @@ class Scheduler:
         """
         return sorted(tasks, key=lambda task: task.priority, reverse=True)
     
+    def detect_conflicts(self) -> List[str]:
+        """
+        Detect temporal conflicts between tasks across all pets in the owner's collection.
+        
+        A conflict is defined as an overlap in time, where a task's scheduled start time 
+        (due_date) occurs before the preceding task's calculated end time. 
+        This uses a lightweight linear sweep algorithm on sorted tasks.
+        
+        Returns:
+            List[str]: A list of human-readable warning messages describing each detected conflict.
+        """
+        # Collect all tasks from all pets
+        all_tasks = []
+        for pet in self.owner.pets:
+            all_tasks.extend(pet.get_tasks())
+            
+        if not all_tasks:
+            return []
+            
+        # Sort by due_date for linear sweep
+        sorted_tasks = sorted(all_tasks, key=lambda task: task.due_date)
+        
+        warnings = []
+        # Use zip to compare adjacent pairs more idiomatically
+        for task_a, task_b in zip(sorted_tasks, sorted_tasks[1:]):
+            # Duration is in minutes, convert to timedelta
+            end_a = task_a.due_date + timedelta(minutes=task_a.duration)
+            
+            if task_b.due_date < end_a:
+                warnings.append(
+                    f"⚠ CONFLICT: '{task_a.name}' and '{task_b.name}' overlap! "
+                    f"({task_a.name} ends at {end_a.strftime('%H:%M')}, but {task_b.name} starts at {task_b.due_date.strftime('%H:%M')})"
+                )
+        
+        return warnings
+    
     def explain_plan(self) -> str:
         """
         Generate a human-readable explanation of the daily plan
@@ -151,5 +230,12 @@ class Scheduler:
         for i, task in enumerate(self.daily_plan, 1):
             explanation += f"{i}. {task.name} ({task.category.value})\n"
             explanation += f"   Duration: {task.duration} min | Priority: {task.priority}/5\n"
+        
+        # Add conflict warnings
+        conflicts = self.detect_conflicts()
+        if conflicts:
+            explanation += "\nScheduling Warnings:\n"
+            for warning in conflicts:
+                explanation += f"- {warning}\n"
         
         return explanation

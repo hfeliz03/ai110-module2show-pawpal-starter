@@ -157,6 +157,41 @@ def test_owner_preferences():
     print(f"  Available time: {owner.daily_time_available} minutes")
 
 
+def test_conflict_detection():
+    """Test the scheduler's ability to detect overlapping tasks"""
+    print("\n" + "=" * 50)
+    print("TEST 6: Conflict Detection")
+    print("=" * 50)
+    
+    from datetime import datetime
+    
+    owner = Owner(name="Sam", daily_time_available=120)
+    pet = Pet(name="Luna", species="cat", age=4)
+    owner.add_pet(pet)
+    
+    # Create two tasks at exactly the same time
+    now = datetime.now()
+    task1 = Task("Morning Feed", 15, 5, TaskCategory.FEEDING, due_date=now)
+    task2 = Task("Medication", 5, 5, TaskCategory.MEDICATION, due_date=now)
+    
+    pet.add_task(task1)
+    pet.add_task(task2)
+    
+    print(f"✓ Created two overlapping tasks for {pet.name} at {now.strftime('%H:%M')}")
+    
+    scheduler = Scheduler(owner)
+    scheduler.generate_plan()
+    explanation = scheduler.explain_plan()
+    
+    print("\nScheduler Explanation (should contain warning):")
+    print(explanation)
+    
+    if "⚠ CONFLICT" in explanation:
+        print("\n✓ SUCCESS: Conflict detected correctly!")
+    else:
+        print("\n❌ FAILURE: Conflict was not detected.")
+
+
 def main():
     """Run all tests"""
     print("\n")
@@ -170,6 +205,7 @@ def main():
         test_task_operations(owner)
         test_multiple_pets()
         test_owner_preferences()
+        test_conflict_detection()
         
         print("\n" + "=" * 50)
         print("✓ ALL TESTS COMPLETED SUCCESSFULLY!")
