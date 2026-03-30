@@ -56,7 +56,7 @@ def test_scheduler(owner):
     daily_plan = scheduler.generate_plan()
     
     print(f"\n✓ Generated daily plan with {len(daily_plan)} tasks")
-    print("\nPlan (sorted by priority):")
+    print("\nPlan (sorted chronologically):")
     for i, task in enumerate(daily_plan, 1):
         print(f"  {i}. {task.name} - {task.duration} min (Priority: {task.priority})")
     

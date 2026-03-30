@@ -160,8 +160,8 @@ class Scheduler:
         for pet in self.owner.pets:
             all_tasks.extend(pet.get_tasks())
         
-        # Sort by priority and fit within available time
-        self.daily_plan = self.sort_tasks_by_priority(all_tasks)
+        # Sort chronologically by due_date
+        self.daily_plan = sorted(all_tasks, key=lambda task: task.due_date)
         return self.daily_plan
     
     def sort_tasks_by_priority(self, tasks: List[Task]) -> List[Task]:
