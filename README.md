@@ -95,35 +95,35 @@ streamlit run app.py
 
 ## Product Tour
 
-### Owner Setup
+### 1. Owner Setup
 
-The workflow starts with a simple owner profile where the user sets daily availability, which becomes a hard scheduling constraint for the planner.
+The workflow starts with an owner profile and a daily time budget. That available-time field becomes a hard constraint for the scheduler.
 
-![Owner setup](assets/owner-setup.png)
+![Owner setup](assets/readme-owner-setup.png)
 
-### Multi-Pet Setup
+### 2. Multi-Pet Setup
 
-PawPal supports more than one pet in the same account, which lets the planner combine care tasks across species into a single daily view.
+PawPal supports multiple pets in the same account, which lets the planner manage tasks across species in one place.
 
-![Pet setup](assets/pet-setup.png)
+![Pet setup](assets/readme-pet-setup.png)
 
-### Schedule Generation and Conflict Detection
+### 3. Schedule Generation and Conflict Detection
 
-The scheduling layer generates a chronological task plan and surfaces overlap warnings when tasks collide, making the deterministic planning logic visible to the user.
+The deterministic scheduler creates a chronological task plan and warns the user when overlapping care tasks create conflicts.
 
-![Schedule and conflicts](assets/schedule-conflicts.png)
+![Schedule and conflicts](assets/readme-schedule-conflicts.png)
 
-### AI Schedule Review
+### 4. AI Schedule Review
 
-After the schedule is built, the AI review stage retrieves pet-care evidence and produces grounded feedback with recommendations, confidence, and cited sources.
+Once the schedule is created, the AI review stage analyzes it using retrieved pet-care guidance and returns a grounded summary, recommendations, and a confidence score.
 
-![AI review](assets/ai-schedule-review.png)
+![AI review](assets/readme-ai-review.png)
 
-### Retrieved Evidence
+### 5. Retrieved Evidence
 
-The UI exposes the evidence used during review so the user can inspect which knowledge snippets informed the final recommendation.
+The UI also shows the evidence snippets used during review so the user can inspect which knowledge sources informed the final feedback.
 
-![Retrieved evidence](assets/retrieved-evidence.png)
+![Retrieved evidence](assets/readme-retrieved-evidence.png)
 
 ### System Architecture
 
