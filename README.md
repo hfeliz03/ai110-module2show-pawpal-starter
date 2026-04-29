@@ -38,7 +38,7 @@ The system has six main pieces:
 
 System diagram:
 
-![PawPal architecture](/Users/vilma/Codepath/AI110%20Project%202/ai110-module2show-pawpal-starter/assets/system_architecture.svg)
+![PawPal architecture](assets/system_architecture.svg)
 
 Data flow:
 - user input -> scheduler -> retriever -> AI reviewer -> cited output
@@ -99,37 +99,37 @@ streamlit run app.py
 
 The workflow starts with a simple owner profile where the user sets daily availability, which becomes a hard scheduling constraint for the planner.
 
-![Owner setup](</Users/vilma/Codepath/AI110 Project 2/ai110-module2show-pawpal-starter/assets/Screenshot 2026-04-28 at 8.40.39 p.m..png>)
+![Owner setup](assets/owner-setup.png)
 
 ### Multi-Pet Setup
 
 PawPal supports more than one pet in the same account, which lets the planner combine care tasks across species into a single daily view.
 
-![Pet setup](</Users/vilma/Codepath/AI110 Project 2/ai110-module2show-pawpal-starter/assets/Screenshot 2026-04-28 at 8.40.35 p.m..png>)
+![Pet setup](assets/pet-setup.png)
 
 ### Schedule Generation and Conflict Detection
 
 The scheduling layer generates a chronological task plan and surfaces overlap warnings when tasks collide, making the deterministic planning logic visible to the user.
 
-![Schedule and conflicts](</Users/vilma/Codepath/AI110 Project 2/ai110-module2show-pawpal-starter/assets/Screenshot 2026-04-28 at 8.40.25 p.m..png>)
+![Schedule and conflicts](assets/schedule-conflicts.png)
 
 ### AI Schedule Review
 
 After the schedule is built, the AI review stage retrieves pet-care evidence and produces grounded feedback with recommendations, confidence, and cited sources.
 
-![AI review](</Users/vilma/Codepath/AI110 Project 2/ai110-module2show-pawpal-starter/assets/Screenshot 2026-04-28 at 8.40.19 p.m..png>)
+![AI review](assets/ai-schedule-review.png)
 
 ### Retrieved Evidence
 
 The UI exposes the evidence used during review so the user can inspect which knowledge snippets informed the final recommendation.
 
-![Retrieved evidence](</Users/vilma/Codepath/AI110 Project 2/ai110-module2show-pawpal-starter/assets/Screenshot 2026-04-28 at 8.40.15 p.m..png>)
+![Retrieved evidence](assets/retrieved-evidence.png)
 
 ### System Architecture
 
 The architecture below shows how the deterministic scheduler, retriever, AI reviewer, and evaluation layer work together as one applied AI system.
 
-![PawPal architecture](/Users/vilma/Codepath/AI110%20Project%202/ai110-module2show-pawpal-starter/assets/system_architecture.svg)
+![PawPal architecture](assets/system_architecture.svg)
 
 ## Sample Interactions
 
