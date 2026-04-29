@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="560" viewBox="0 0 980 560">
+  <style>
+    .title { font: 700 24px Arial, sans-serif; fill: #12343b; }
+    .label { font: 600 16px Arial, sans-serif; fill: #102a43; }
+    .body { font: 14px Arial, sans-serif; fill: #243b53; }
+    .box { fill: #f0f4f8; stroke: #486581; stroke-width: 2; rx: 14; ry: 14; }
+    .accent { fill: #d9e2ec; stroke: #334e68; stroke-width: 2; rx: 14; ry: 14; }
+    .line { stroke: #334e68; stroke-width: 2.5; marker-end: url(#arrow); }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#334e68"/>
+    </marker>
+  </defs>
+  <text x="40" y="40" class="title">PawPal AI Care Coach Architecture</text>
+
+  <rect x="40" y="90" width="200" height="90" class="box"/>
+  <text x="60" y="125" class="label">1. Streamlit UI</text>
+  <text x="60" y="150" class="body">Owner, pet, task input</text>
+  <text x="60" y="170" class="body">AI review request</text>
+
+  <rect x="300" y="90" width="220" height="90" class="box"/>
+  <text x="320" y="125" class="label">2. Scheduler</text>
+  <text x="320" y="150" class="body">Generate plan</text>
+  <text x="320" y="170" class="body">Detect conflicts</text>
+
+  <rect x="590" y="70" width="250" height="100" class="accent"/>
+  <text x="610" y="105" class="label">3. Query Builder</text>
+  <text x="610" y="130" class="body">Species, age, tasks, question</text>
+  <text x="610" y="150" class="body">Owner constraints</text>
+
+  <rect x="590" y="230" width="250" height="100" class="box"/>
+  <text x="610" y="265" class="label">4. Retriever</text>
+  <text x="610" y="290" class="body">Ranks local guidance snippets</text>
+  <text x="610" y="310" class="body">Returns citations</text>
+
+  <rect x="40" y="250" width="200" height="110" class="accent"/>
+  <text x="60" y="285" class="label">Knowledge Base</text>
+  <text x="60" y="310" class="body">Local pet-care documents</text>
+  <text x="60" y="330" class="body">Species + guardrails</text>
+
+  <rect x="300" y="250" width="220" height="110" class="box"/>
+  <text x="320" y="285" class="label">5. AI Reviewer</text>
+  <text x="320" y="310" class="body">Optional OpenAI call</text>
+  <text x="320" y="330" class="body">Fallback grounded synthesis</text>
+
+  <rect x="300" y="420" width="220" height="90" class="accent"/>
+  <text x="320" y="455" class="label">6. Logger + Evaluator</text>
+  <text x="320" y="480" class="body">Tests, confidence, failures</text>
+
+  <rect x="590" y="410" width="250" height="100" class="box"/>
+  <text x="610" y="445" class="label">7. User Output</text>
+  <text x="610" y="470" class="body">Schedule review, warnings, citations</text>
+  <text x="610" y="490" class="body">Human checks result</text>
+
+  <line x1="240" y1="135" x2="300" y2="135" class="line"/>
+  <line x1="520" y1="135" x2="590" y2="120" class="line"/>
+  <line x1="715" y1="170" x2="715" y2="230" class="line"/>
+  <line x1="240" y1="305" x2="300" y2="305" class="line"/>
+  <line x1="520" y1="305" x2="590" y2="280" class="line"/>
+  <line x1="590" y1="305" x2="520" y2="305" class="line"/>
+  <line x1="410" y1="360" x2="410" y2="420" class="line"/>
+  <line x1="520" y1="305" x2="590" y2="460" class="line"/>
+  <line x1="840" y1="460" x2="900" y2="460" class="line"/>
+
+  <text x="860" y="448" class="body">Human review</text>
+</svg>

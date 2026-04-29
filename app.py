@@ -1,5 +1,6 @@
 import streamlit as st
 from pawpal_system import *
+from ai_reviewer import PawPalAIReviewer
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
@@ -26,6 +27,9 @@ if "owner" not in st.session_state:
 
 if "current_pet" not in st.session_state:
     st.session_state.current_pet = None
+
+if "ai_review_result" not in st.session_state:
+    st.session_state.ai_review_result = None
 
 st.divider()
 
@@ -259,5 +263,51 @@ if st.session_state.owner and st.session_state.owner.pets:
                 )
         else:
             st.info("Add some tasks to your pet(s) to generate a schedule.")
+
+    st.divider()
+    st.subheader("🤖 AI Schedule Review")
+    st.caption("Retrieves local pet-care guidance before reviewing the schedule")
+
+    ai_question = st.text_area(
+        "Optional question for PawPal AI Care Coach",
+        value="Review this schedule and tell me what care coverage might be missing.",
+        key="ai_question_input"
+    )
+
+    if st.button("Run AI Review", key="run_ai_review_btn"):
+        scheduler = Scheduler(st.session_state.owner)
+        reviewer = PawPalAIReviewer()
+        try:
+            st.session_state.ai_review_result = reviewer.review_schedule(
+                st.session_state.owner,
+                scheduler,
+                ai_question
+            )
+        except Exception as exc:
+            st.session_state.ai_review_result = None
+            st.error(f"AI review failed safely: {exc}")
+
+    result = st.session_state.ai_review_result
+    if result:
+        mode_label = "Fallback grounded reviewer" if result.used_fallback else "OpenAI reviewer"
+        st.success(f"AI review completed using: {mode_label}")
+        st.metric("Confidence", f"{result.confidence:.2f}")
+
+        st.markdown("#### Summary")
+        st.write(result.summary)
+
+        st.markdown("#### Recommendations")
+        for recommendation in result.recommendations:
+            st.write(f"- {recommendation}")
+
+        if result.warnings:
+            st.markdown("#### Guardrails and Warnings")
+            for warning in result.warnings:
+                st.warning(warning)
+
+        if result.citations:
+            st.markdown("#### Retrieved Evidence")
+            for citation in result.citations:
+                st.write(f"- {citation}")
 else:
     st.info("Create an owner profile and add a pet to generate a schedule.")
