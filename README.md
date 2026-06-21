@@ -227,6 +227,10 @@ The app includes explicit safety boundaries:
 - I added an optional OpenAI path, but the fallback reviewer remains the default-safe path for environments without API access.
 - The retriever is intentionally simple and transparent. It uses token overlap rather than embeddings, which is easier to test but less expressive than a production-grade semantic retriever.
 
+## Tech Fellow Reflection
+
+As a Tech Fellow, I would help students approach this assignment by separating the deterministic scheduling work from the AI review layer, then testing each piece in small steps before combining them. A common challenge is trying to debug the Streamlit UI, scheduling logic, and retrieval behavior all at once, so I would encourage students to validate the underlying Python classes first and use the tests as a safety net. The main takeaways from this project are how to decompose a larger product into clear components, when to use traditional logic instead of an LLM, and how grounding AI output in evidence makes the final system more reliable and responsible.
+
 ## Testing Summary
 
 What worked:

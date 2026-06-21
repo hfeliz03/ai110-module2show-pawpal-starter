@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="980" height="560" viewBox="0 0 980 560">
+  <title>PawPal AI Care Coach architecture diagram</title>
+  <desc>Diagram showing the Streamlit UI, scheduler, query builder, retriever, AI reviewer, evaluator, and user output flow.</desc>
   <style>
     .title { font: 700 24px Arial, sans-serif; fill: #12343b; }
     .label { font: 600 16px Arial, sans-serif; fill: #102a43; }

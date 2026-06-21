@@ -6,6 +6,7 @@ from retriever import SimpleRetriever
 
 
 def test_retriever_returns_dog_exercise_guidance():
+    """Retriever should surface dog exercise guidance for matching queries."""
     retriever = SimpleRetriever()
     results = retriever.retrieve("dog walking play exercise schedule", top_k=3)
 
@@ -15,6 +16,7 @@ def test_retriever_returns_dog_exercise_guidance():
 
 
 def test_ai_review_adds_guardrail_for_urgent_question():
+    """Urgent medical wording should trigger a veterinarian warning."""
     owner = Owner("Jamie", daily_time_available=80)
     dog = Pet("Scout", "dog", 11)
     dog.add_task(Task("Morning meds", 5, 5, TaskCategory.MEDICATION, due_date=datetime(2026, 4, 1, 9, 0)))
@@ -28,6 +30,7 @@ def test_ai_review_adds_guardrail_for_urgent_question():
 
 
 def test_ai_review_reduces_confidence_when_no_retrieval_match():
+    """Confidence should drop when the retriever has little relevant evidence."""
     owner = Owner("Pat", daily_time_available=60)
     pet = Pet("Bean", "other", 1)
     pet.add_task(Task("Custom ritual", 10, 3, TaskCategory.OTHER, due_date=datetime(2026, 4, 1, 10, 0)))

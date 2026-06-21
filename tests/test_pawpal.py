@@ -3,13 +3,7 @@ from pawpal_system import Task, Pet, TaskCategory
 
 
 def test_task_completion():
-    """
-    Test the functionality of the `mark_completed` method in the `Task` class.
-    This test ensures that:
-    1. A newly created task has its `completed` status set to `False` by default.
-    2. Calling the `mark_completed` method updates the `completed` status to `True`.
-    """
-    """Verify that calling mark_completed() actually changes the task's status."""
+    """Verify that mark_completed() flips a task from incomplete to complete."""
     # Create a task with default completed status (False)
     task = Task(
         name="Feed the dog",
@@ -19,13 +13,13 @@ def test_task_completion():
     )
     
     # Verify initial status is False
-    assert task.completed == False
+    assert task.completed is False
     
     # Mark task as completed
     task.mark_completed()
     
     # Verify status changed to True
-    assert task.completed == True
+    assert task.completed is True
 
 
 def test_task_addition():

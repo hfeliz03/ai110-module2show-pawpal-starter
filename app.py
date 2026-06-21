@@ -21,7 +21,7 @@ for their pet(s) based on constraints like time, priority, and preferences.
 """
     )
 
-# Initialize session state for owner and current pet
+# Initialize session state once so reruns keep the current planning context.
 if "owner" not in st.session_state:
     st.session_state.owner = None
 
@@ -154,7 +154,7 @@ if st.session_state.current_pet:
         st.session_state.current_pet.add_task(new_task)
         st.success(f"✓ Added task: {task_name}")
     
-    # Global Conflict Warnings
+    # Show scheduling warnings before the full task table so conflicts are easy to spot.
     scheduler = Scheduler(st.session_state.owner)
     conflicts = scheduler.detect_conflicts()
     if conflicts:

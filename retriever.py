@@ -42,6 +42,7 @@ STOP_WORDS = {
 
 @dataclass(frozen=True)
 class KnowledgeSnippet:
+    """A retrieved knowledge chunk paired with its source metadata."""
     source: str
     section: str
     text: str
@@ -52,6 +53,7 @@ class KnowledgeSnippet:
 
 
 def _tokenize(text: str) -> List[str]:
+    """Normalize text into searchable tokens for simple overlap scoring."""
     tokens = re.findall(r"[a-zA-Z]+", text.lower())
     return [token for token in tokens if token not in STOP_WORDS]
 
@@ -109,6 +111,7 @@ class SimpleRetriever:
         self.knowledge_base = knowledge_base or KnowledgeBase()
 
     def retrieve(self, query: str, top_k: int = 4) -> List[KnowledgeSnippet]:
+        """Return the highest-overlap snippets for the given pet-care query."""
         query_tokens = set(_tokenize(query))
         if not query_tokens:
             return []

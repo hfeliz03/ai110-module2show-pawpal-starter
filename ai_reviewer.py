@@ -14,6 +14,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def configure_logging() -> None:
+    """Configure a simple file logger for review runs and fallbacks."""
     logging.basicConfig(
         filename="pawpal_ai.log",
         level=logging.INFO,
@@ -23,6 +24,7 @@ def configure_logging() -> None:
 
 @dataclass
 class AIReviewResult:
+    """Structured output returned by the AI reviewer layer."""
     summary: str
     recommendations: List[str]
     warnings: List[str]
@@ -32,6 +34,8 @@ class AIReviewResult:
 
 
 class PawPalAIReviewer:
+    """Review schedules using retrieved guidance plus a model or safe fallback."""
+
     def __init__(self, retriever: Optional[SimpleRetriever] = None):
         self.retriever = retriever or SimpleRetriever()
 
