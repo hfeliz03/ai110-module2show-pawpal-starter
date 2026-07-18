@@ -36,7 +36,11 @@ The system has six main pieces:
 - AI reviewer that produces grounded feedback using either an OpenAI model or a safe fallback reviewer
 - Logger and evaluation harness for reliability checks
 
-System diagram:
+System diagram source:
+
+- [system_diagram.mmd](/Users/vilma/Codepath/TF/AI110/ai110-module2show-pawpal-starter-1/system_diagram.mmd)
+
+Rendered diagram:
 
 ![PawPal architecture](assets/system_architecture.svg)
 
@@ -46,12 +50,13 @@ Data flow:
 
 ## Repository Structure
 
-- [app.py](/Users/vilma/Codepath/AI110%20Project%202/ai110-module2show-pawpal-starter/app.py) contains the Streamlit app
-- [pawpal_system.py](/Users/vilma/Codepath/AI110%20Project%202/ai110-module2show-pawpal-starter/pawpal_system.py) contains the original scheduling logic
-- [retriever.py](/Users/vilma/Codepath/AI110%20Project%202/ai110-module2show-pawpal-starter/retriever.py) loads and ranks local knowledge snippets
-- [ai_reviewer.py](/Users/vilma/Codepath/AI110%20Project%202/ai110-module2show-pawpal-starter/ai_reviewer.py) orchestrates the AI schedule review
-- [evaluation.py](/Users/vilma/Codepath/AI110%20Project%202/ai110-module2show-pawpal-starter/evaluation.py) runs the reliability scenarios
-- [model_card.md](/Users/vilma/Codepath/AI110%20Project%202/ai110-module2show-pawpal-starter/model_card.md) contains reflection, ethics, and AI-collaboration notes
+- [app.py](/Users/vilma/Codepath/TF/AI110/ai110-module2show-pawpal-starter-1/app.py) contains the Streamlit app
+- [pawpal_system.py](/Users/vilma/Codepath/TF/AI110/ai110-module2show-pawpal-starter-1/pawpal_system.py) contains the original scheduling logic
+- [retriever.py](/Users/vilma/Codepath/TF/AI110/ai110-module2show-pawpal-starter-1/retriever.py) loads and ranks local knowledge snippets
+- [ai_reviewer.py](/Users/vilma/Codepath/TF/AI110/ai110-module2show-pawpal-starter-1/ai_reviewer.py) orchestrates the AI schedule review
+- [evaluation.py](/Users/vilma/Codepath/TF/AI110/ai110-module2show-pawpal-starter-1/evaluation.py) runs the reliability scenarios
+- [model_card.md](/Users/vilma/Codepath/TF/AI110/ai110-module2show-pawpal-starter-1/model_card.md) contains reflection, ethics, and AI-collaboration notes
+- [ai_interactions.md](/Users/vilma/Codepath/TF/AI110/ai110-module2show-pawpal-starter-1/ai_interactions.md) stores intermediate AI workflow traces
 - `knowledge/` stores the local pet-care guidance documents used for retrieval
 - `tests/` stores unit tests for scheduling, recurrence, retrieval, and guardrails
 
@@ -206,10 +211,14 @@ What it does:
 - marks each scenario pass or fail based on expected grounded behavior
 
 Current summary:
-- baseline scheduler and AI extension tests pass locally
-- the evaluation script checks 5 predefined scenarios
-- the system is strongest when the user asks routine planning questions that match the knowledge base
-- confidence drops when retrieval coverage is weak or the user asks for medical advice
+
+| Check | Result |
+| --- | --- |
+| `pytest` suite | `15/15` tests passed locally |
+| `evaluation.py` scenarios | `5/5` scenarios passed locally |
+| Strongest behavior | Routine planning questions that match the knowledge base |
+| Weakest behavior | Coverage drops for niche pets or questions outside the local documents |
+| Safety behavior | Medical or urgent questions trigger warnings and lower-confidence responses |
 
 ## Guardrails
 
@@ -227,6 +236,16 @@ The app includes explicit safety boundaries:
 - I added an optional OpenAI path, but the fallback reviewer remains the default-safe path for environments without API access.
 - The retriever is intentionally simple and transparent. It uses token overlap rather than embeddings, which is easier to test but less expressive than a production-grade semantic retriever.
 
+## Stretch Features
+
+This submission also includes optional extensions beyond the minimum requirement:
+
+| Stretch feature | Evidence |
+| --- | --- |
+| RAG enhancement | Retrieval uses multiple local data sources across species guides plus shared guardrails in `knowledge/`, which improves grounding breadth compared with a single-note lookup |
+| Agentic workflow enhancement | The system performs a multi-step chain: schedule generation -> query building -> retrieval -> review -> confidence and warning checks, with example traces in [ai_interactions.md](/Users/vilma/Codepath/TF/AI110/ai110-module2show-pawpal-starter-1/ai_interactions.md) |
+| Test harness or evaluation script | [evaluation.py](/Users/vilma/Codepath/TF/AI110/ai110-module2show-pawpal-starter-1/evaluation.py) runs predefined scenarios and prints a pass/fail summary |
+
 ## Tech Fellow Reflection
 
 As a Tech Fellow, I would help students approach this assignment by separating the deterministic scheduling work from the AI review layer, then testing each piece in small steps before combining them. A common challenge is trying to debug the Streamlit UI, scheduling logic, and retrieval behavior all at once, so I would encourage students to validate the underlying Python classes first and use the tests as a safety net. The main takeaways from this project are how to decompose a larger product into clear components, when to use traditional logic instead of an LLM, and how grounding AI output in evidence makes the final system more reliable and responsible.
@@ -237,6 +256,16 @@ What worked:
 - the original scheduling and recurrence logic remained stable
 - retrieval consistently surfaced relevant species guidance for the supported scenarios
 - urgent questions triggered guardrails instead of overconfident advice
+
+Structured results:
+
+| Test input | Evaluation criteria | Result |
+| --- | --- | --- |
+| Dog schedule with only feeding | Recommends exercise or play | Pass |
+| Cat schedule without play | Recommends enrichment | Pass |
+| Overbooked owner schedule | Warns when total time exceeds available time | Pass |
+| Bird schedule review | Returns grounded citations | Pass |
+| Urgent medication question | Escalates to veterinarian guidance | Pass |
 
 What did not fully work:
 - the local knowledge base is small, so unusual pets and unusual questions can produce weaker retrieval matches

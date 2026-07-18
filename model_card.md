@@ -29,9 +29,13 @@ The app uses an optional OpenAI model if `OPENAI_API_KEY` is available. Otherwis
 ## Testing Results
 
 Current local reliability summary:
-- Existing scheduler tests pass.
-- Retrieval and AI review tests verify citation generation, missing-context handling, and urgent-question guardrails.
-- Evaluation script reports pass/fail status across predefined scenarios.
+
+| Check | Result |
+| --- | --- |
+| Pytest suite | `15/15` passed |
+| Evaluation scenarios | `5/5` passed |
+| Retrieval behavior | Relevant citations returned for supported species scenarios |
+| Guardrail behavior | Urgent medical wording triggered veterinary escalation |
 
 ## Limitations and Biases
 
@@ -70,3 +74,23 @@ Flawed or incorrect suggestion:
 ### What this project taught me
 
 A practical AI system is stronger when it combines deterministic logic with grounded generation and visible evaluation. The scheduler handles structure well, while the retrieval-based review adds useful reasoning without pretending to be a veterinarian.
+
+## Stretch Feature Notes
+
+### RAG Enhancement
+
+The retrieval layer now draws from multiple local sources instead of a single reference note: species-specific care guides plus shared guardrails. That broader evidence base improved citation coverage for mixed cases where routine care guidance and safety rules both matter.
+
+### Agentic Workflow Enhancement
+
+PawPal now follows a multi-step workflow rather than a single generation call:
+
+1. Build the daily schedule.
+2. Convert schedule state into a retrieval query.
+3. Retrieve matching guidance.
+4. Review the plan with citations, warnings, and confidence.
+5. Log the outcome and expose the trace in `ai_interactions.md`.
+
+### Evaluation Harness
+
+The repository includes `evaluation.py`, which runs predefined scenarios and prints a parseable pass/fail summary. This complements unit tests by checking end-to-end AI behavior rather than isolated functions.

@@ -1,0 +1,13 @@
+flowchart TD
+    A[Owner enters profile, pets, and tasks in Streamlit UI] --> B[Deterministic Scheduler]
+    B --> C[Daily plan, recurring tasks, conflict checks]
+    C --> D[Query Builder]
+    D --> E[SimpleRetriever over local knowledge base]
+    E --> F[Retrieved species and guardrail snippets]
+    F --> G[AI Reviewer]
+    C --> G
+    G --> H[Grounded review output]
+    H --> I[Summary, recommendations, warnings, confidence, citations]
+    G --> J[(pawpal_ai.log)]
+    K[Pytest + evaluation.py] --> G
+    L[Human reviewer inspects evidence and output] --> I
